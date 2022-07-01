@@ -9,10 +9,11 @@ class DrawInformation:
     WHITE= 255,255,255
     GREEN=0,255,0
     RED=255,0,0
+    YELLOW=0,0,255
     GREY=160,160,160
     DARK_GREY=192,192,192
     LIGHT_GREY=128,128,128
-    BACKGROUND_COLOR=WHITE
+    BACKGROUND_COLOR=242, 241, 239
     GRADIANT=[GREY,LIGHT_GREY,DARK_GREY]
     
     SIDE_PAD=100
@@ -46,7 +47,7 @@ def draw(draw_info,algorithm_name):
     title=draw_info.LARGE_FONT.render(f'{algorithm_name}',1,draw_info.RED)
     draw_info.window.blit(title,(draw_info.width/2-title.get_width()/2, 5))
 
-    sorting=draw_info.FONT.render('B-Bubble Sort | I-Insertion Sort | S-Selection Sort | Q-Quick Sort', 1, draw_info.BLACK)
+    sorting=draw_info.FONT.render('B-Bubble Sort | I-Insertion Sort | S-Selection Sort | Q-Quick Sort | H-Heap Sort', 1, draw_info.BLACK)
     draw_info.window.blit(sorting,(draw_info.width/2-sorting.get_width()/2, 65))
     
     controls=draw_info.FONT.render('R-Reset | Space-Start Sotring ',1,draw_info.BLACK)
@@ -77,7 +78,6 @@ def draw_list(draw_info,color_position={},clear_bg=False):
 
     if clear_bg:
         pygame.display.update()
-
 
 def generate_starting_list(n,min_val,max_val):
     lst=[]
@@ -178,6 +178,44 @@ def quickSortIterative(draw_info):
         yield True
     return lst
 
+def heapify(arr, n, i):
+    largest = i  # Initialize largest as root
+    l = 2 * i + 1     # left = 2*i + 1
+    r = 2 * i + 2     # right = 2*i + 2
+  
+    # See if left child of root exists and is
+    # greater than root
+    if l < n and arr[largest] < arr[l]:
+        largest = l
+  
+    # See if right child of root exists and is
+    # greater than root
+    if r < n and arr[largest] < arr[r]:
+        largest = r
+  
+    # Change root, if needed
+    if largest != i:
+        arr[i], arr[largest] = arr[largest], arr[i]  # swap
+        # Heapify the root.
+        heapify(arr, n, largest)
+
+def heapSort(draw_info):
+    arr=draw_info.lst
+    n = len(arr)
+  
+    # Build a maxheap.
+    for i in range(n//2 - 1, -1, -1):
+        # draw_list(draw_info,color_position={i:draw_info.RED},clear_bg=True)
+        # yield True
+        heapify(arr, n, i)
+  
+    # One by one extract elements
+    for i in range(n-1, 0, -1):
+        arr[i], arr[0] = arr[0], arr[i]  # swap
+        heapify(arr, i, 0)
+        draw_list(draw_info,color_position={i:draw_info.GREEN},clear_bg=True)
+        yield True
+        
 
 def main():
     WIDTH=800
@@ -199,8 +237,6 @@ def main():
     sorting_algorithm=None
     sorting_algo_name=None
     sorting_algorithm_generator=None
-
-
 
     while run:
         # To be run at 60 fps
@@ -242,6 +278,9 @@ def main():
             elif event.key == pygame.K_q and sorting==False:
                 sorting_algorithm=quickSortIterative
                 sorting_algo_name='Quick Sort'
+            elif event.key == pygame.K_h and sorting==False:
+                sorting_algorithm=heapSort
+                sorting_algo_name='Heap Sort'
             
 
 
