@@ -9,7 +9,7 @@ class DrawInformation:
     WHITE= 255,255,255
     GREEN=0,255,0
     RED=255,0,0
-    YELLOW=0,0,255
+    YELLOW=255,255,0
     GREY=160,160,160
     DARK_GREY=192,192,192
     LIGHT_GREY=128,128,128
@@ -127,7 +127,7 @@ def selection_sort(draw_info):
         yield True
     return lst
 
-def partition(arr, l, h,draw_info):
+def partition(arr, l, h):
     i = ( l - 1 )
     x = arr[h]
   
@@ -137,7 +137,7 @@ def partition(arr, l, h,draw_info):
             arr[i], arr[j] = arr[j], arr[i]
   
     arr[i + 1], arr[h] = arr[h], arr[i + 1]
-   
+    
     return (i + 1)
   
 def quickSortIterative(draw_info):  
@@ -161,7 +161,7 @@ def quickSortIterative(draw_info):
         l = stack[top]
         top = top - 1
   
-        p = partition(lst, l, h,draw_info )
+        p = partition(lst, l, h)
 
         if p-1 > l:
             top = top + 1
@@ -174,7 +174,7 @@ def quickSortIterative(draw_info):
             stack[top] = p + 1
             top = top + 1
             stack[top] = h
-        draw_list(draw_info,color_position={p:draw_info.GREEN,h:draw_info.RED},clear_bg=True)
+        draw_list(draw_info,color_position={p:draw_info.GREEN, h:draw_info.RED},clear_bg=True)
         yield True
     return lst
 
@@ -208,6 +208,8 @@ def heapSort(draw_info):
         # draw_list(draw_info,color_position={i:draw_info.RED},clear_bg=True)
         # yield True
         heapify(arr, n, i)
+        draw_list(draw_info,color_position={i:draw_info.YELLOW},clear_bg=True)
+        yield True
   
     # One by one extract elements
     for i in range(n-1, 0, -1):
@@ -240,7 +242,7 @@ def main():
 
     while run:
         # To be run at 60 fps
-        clock.tick(50)
+        clock.tick(40)
 
         if sorting:
             try:
